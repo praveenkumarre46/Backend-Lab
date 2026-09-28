@@ -1,6 +1,5 @@
-import os
 from datetime import datetime, timedelta, timezone
-
+from config import settings
 import schemas
 from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, status
@@ -8,10 +7,9 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
 
-load_dotenv()
-SECRET_KEY = os.getenv("SECRET_KEY", "development-secret-key")
-ALGORITHM = os.getenv("ALGORITHM", "HS256")
-EXPIRATION_TIME = int(os.getenv("EXPIRATION_TIME", "30"))
+SECRET_KEY =settings.SECRET_KEY 
+ALGORITHM = settings.ALGORITHM
+EXPIRATION_TIME = settings.EXPIRATION_TIME
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")

@@ -66,3 +66,9 @@ class twitternewuser(BaseModel):
     user: TwitterUser
 
     model_config = {"from_attributes": True}
+
+class liketweet(BaseModel):
+    tweetid:int
+    like:bool
+    model_config={"from_attributes":True}
+    

@@ -58,3 +58,38 @@ async def getalltweets(user_id:int,db:Session=Depends(get_db),current_user:schem
     return tweets
 
 
+@router.post("/like")
+async def liketweet(like:schemas.liketweet,db: Session = Depends(get_db),current_user: schemas.TokenData = Depends(get_current_user),):
+    user = db.query(models.users).filter(
+        models.users.email == current_user.id
+    ).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User account not found",
+        )
+
+    tweet = db.query(models.Twitter).filter(
+        models.Twitter.tweetid == like.tweetid
+    ).first()
+    if not tweet:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Tweet is not available",
+        )
+
+    existing_like = db.query(models.Likes).filter(
+        models.Likes.tweetid == like.tweetid,
+        models.Likes.userid == user.userid,
+    ).first()
+
+    if like.like and not existing_like:
+        db.add(models.Likes(tweetid=like.tweetid, userid=user.userid))
+    elif not like.like and existing_like:
+        db.delete(existing_like)
+
+    db.commit()
+    return {"liked": like.like}
+
+
+    

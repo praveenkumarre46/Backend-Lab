@@ -43,3 +43,8 @@ class Twitter(Base):
     createdat=Column(DateTime,default=datetime.utcnow)
 
     user=relationship("users")
+
+class Likes(Base):
+    __tablename__="Likes"
+    tweetid=Column(Integer,ForeignKey("Tweets.tweetid",ondelete="CASCADE"),nullable=False,primary_key=True)
+    userid=Column(Integer,ForeignKey("users.userid", ondelete="CASCADE"),nullable=False,primary_key=True)
